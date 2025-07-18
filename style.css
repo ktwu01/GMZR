@@ -9,12 +9,14 @@ body {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     min-height: 100vh;
     color: #333;
+    transition: background 0.5s ease;
 }
 
 .container {
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
+    transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
 header {
@@ -135,6 +137,31 @@ footer h3 {
     color: #667eea;
     margin-bottom: 15px;
     text-align: center;
+}
+
+.favorites-controls {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.control-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: bold;
+    background: #667eea;
+    color: white;
+}
+
+.control-btn:hover {
+    background: #5a6fd8;
+    transform: translateY(-2px);
 }
 
 .favorites-list {

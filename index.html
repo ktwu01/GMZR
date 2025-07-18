@@ -37,6 +37,11 @@
         <footer>
             <div class="favorites-section">
                 <h3>我的收藏</h3>
+                <div class="favorites-controls">
+                    <button id="exportBtn" class="control-btn">📤 导出收藏</button>
+                    <button id="importBtn" class="control-btn">📥 导入收藏</button>
+                    <input type="file" id="importFile" accept=".json" style="display: none;">
+                </div>
                 <div id="favoritesList" class="favorites-list"></div>
             </div>
             <div class="love-message">
