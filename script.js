@@ -34,6 +34,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // 绑定事件
     document.getElementById('newQuoteBtn').addEventListener('click', getRandomQuoteHandler);
     document.getElementById('favoriteBtn').addEventListener('click', toggleFavorite);
+    document.getElementById('themeBtn').addEventListener('click', switchTheme);
+    
+    // 初始化主题
+    initTheme();
 });
 
 // 更新日期显示
@@ -152,5 +156,72 @@ function addQuoteAnimation() {
         quoteCard.style.opacity = '1';
         characterCard.style.transform = 'scale(1)';
         characterCard.style.opacity = '1';
+    }, 200);
+}
+// 
+主题切换功能
+const themes = [
+    { name: 'default', displayName: '默认紫色', emoji: '💜' },
+    { name: 'flame', displayName: '炎之呼吸', emoji: '🔥' },
+    { name: 'water', displayName: '水之呼吸', emoji: '🌊' },
+    { name: 'sakura', displayName: '樱花飞舞', emoji: '🌸' },
+    { name: 'dark', displayName: '夜间模式', emoji: '🌙' }
+];
+
+let currentThemeIndex = 0;
+
+// 初始化主题
+function initTheme() {
+    const savedTheme = localStorage.getItem('demonSlayerTheme') || 'default';
+    const themeIndex = themes.findIndex(theme => theme.name === savedTheme);
+    currentThemeIndex = themeIndex >= 0 ? themeIndex : 0;
+    
+    applyTheme(themes[currentThemeIndex].name);
+    updateThemeButton();
+}
+
+// 切换主题
+function switchTheme() {
+    currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+    const newTheme = themes[currentThemeIndex];
+    
+    applyTheme(newTheme.name);
+    updateThemeButton();
+    
+    // 保存主题设置
+    localStorage.setItem('demonSlayerTheme', newTheme.name);
+    
+    // 添加切换动画
+    addThemeAnimation();
+}
+
+// 应用主题
+function applyTheme(themeName) {
+    // 移除所有主题类
+    document.body.className = document.body.className.replace(/theme-\w+/g, '');
+    
+    // 添加新主题类
+    document.body.classList.add(`theme-${themeName}`);
+}
+
+// 更新主题按钮文字
+function updateThemeButton() {
+    const themeBtn = document.getElementById('themeBtn');
+    const currentTheme = themes[currentThemeIndex];
+    const nextTheme = themes[(currentThemeIndex + 1) % themes.length];
+    
+    themeBtn.textContent = `${currentTheme.emoji} ${currentTheme.displayName}`;
+    themeBtn.title = `点击切换到：${nextTheme.displayName}`;
+}
+
+// 主题切换动画
+function addThemeAnimation() {
+    const container = document.querySelector('.container');
+    container.style.transform = 'scale(0.98)';
+    container.style.opacity = '0.8';
+    
+    setTimeout(() => {
+        container.style.transform = 'scale(1)';
+        container.style.opacity = '1';
     }, 200);
 }

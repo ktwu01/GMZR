@@ -185,6 +185,226 @@ footer h3 {
     text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
 }
 
+/* 主题切换按钮 */
+.theme-selector {
+    margin-top: 15px;
+}
+
+.theme-btn {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.theme-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+.checkin-btn {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    margin-left: 10px;
+}
+
+.checkin-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+.checkin-btn.checked-in {
+    background: rgba(76, 175, 80, 0.8);
+    border-color: rgba(76, 175, 80, 0.9);
+}
+
+.checkin-status {
+    margin-top: 15px;
+    text-align: center;
+    color: white;
+    font-size: 0.9rem;
+}
+
+.streak-info {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 10px 15px;
+    backdrop-filter: blur(10px);
+    display: inline-block;
+}
+
+.streak-number {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #ffd700;
+}
+
+/* 主题样式 */
+/* 默认主题 - 紫色渐变 */
+body.theme-default {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+/* 火焰主题 - 炼狱杏寿郎 */
+body.theme-flame {
+    background: linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #ffcc02 100%);
+}
+
+body.theme-flame .quote-section {
+    border: 2px solid #ff6b35;
+}
+
+body.theme-flame .character-image {
+    border-color: #ff6b35;
+}
+
+body.theme-flame .quote-card {
+    background: #fff8f0;
+    border-left-color: #ff6b35;
+}
+
+body.theme-flame .character-name {
+    color: #ff6b35;
+}
+
+body.theme-flame .btn:first-child {
+    background: #ff6b35;
+}
+
+body.theme-flame .btn:first-child:hover {
+    background: #e55a2b;
+}
+
+/* 水之主题 - 富冈义勇 */
+body.theme-water {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+body.theme-water .quote-section {
+    border: 2px solid #4facfe;
+}
+
+body.theme-water .character-image {
+    border-color: #4facfe;
+}
+
+body.theme-water .quote-card {
+    background: #f0f8ff;
+    border-left-color: #4facfe;
+}
+
+body.theme-water .character-name {
+    color: #4facfe;
+}
+
+body.theme-water .btn:first-child {
+    background: #4facfe;
+}
+
+body.theme-water .btn:first-child:hover {
+    background: #3d8bfe;
+}
+
+/* 樱花主题 - 甘露寺蜜璃 */
+body.theme-sakura {
+    background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+}
+
+body.theme-sakura .quote-section {
+    border: 2px solid #ff9a9e;
+}
+
+body.theme-sakura .character-image {
+    border-color: #ff9a9e;
+}
+
+body.theme-sakura .quote-card {
+    background: #fff5f5;
+    border-left-color: #ff9a9e;
+}
+
+body.theme-sakura .character-name {
+    color: #ff9a9e;
+}
+
+body.theme-sakura .btn:first-child {
+    background: #ff9a9e;
+}
+
+body.theme-sakura .btn:first-child:hover {
+    background: #ff8a8e;
+}
+
+/* 夜间主题 */
+body.theme-dark {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+}
+
+body.theme-dark .quote-section {
+    background: #34495e;
+    color: #ecf0f1;
+    border: 2px solid #3498db;
+}
+
+body.theme-dark .character-image {
+    border-color: #3498db;
+}
+
+body.theme-dark .quote-card {
+    background: #2c3e50;
+    border-left-color: #3498db;
+}
+
+body.theme-dark .quote-text {
+    color: #ecf0f1;
+}
+
+body.theme-dark .character-name {
+    color: #3498db;
+}
+
+body.theme-dark .btn:first-child {
+    background: #3498db;
+}
+
+body.theme-dark .btn:first-child:hover {
+    background: #2980b9;
+}
+
+body.theme-dark footer {
+    background: #34495e;
+    color: #ecf0f1;
+}
+
+body.theme-dark footer h3 {
+    color: #3498db;
+}
+
+body.theme-dark .favorite-item {
+    background: #2c3e50;
+    border-left-color: #3498db;
+}
+
+body.theme-dark .favorite-item .character {
+    color: #3498db;
+}
+
+body.theme-dark .favorite-item .quote {
+    color: #bdc3c7;
+}
+
 @media (max-width: 600px) {
     .container {
         padding: 15px;
