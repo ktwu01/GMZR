@@ -1,0 +1,25 @@
+请将以下角色的头像图片放入此文件夹：
+
+必需的图片文件：
+- tanjiro.jpg (竈门炭治郎)
+- nezuko.jpg (竈门祢豆子)
+- zenitsu.jpg (我妻善逸)
+- inosuke.jpg (嘴平伊之助)
+- giyuu.jpg (富冈义勇)
+- shinobu.jpg (胡蝶忍)
+- rengoku.jpg (炼狱杏寿郎)
+- tengen.jpg (宇髄天元)
+- muichiro.jpg (时透无一郎)
+- mitsuri.jpg (甘露寺蜜璃)
+- obanai.jpg (伊黑小芭内)
+- sanemi.jpg (不死川实弥)
+- gyomei.jpg (悲鸣屿行冥)
+- kagaya.jpg (产屋敷耀哉)
+- urokodaki.jpg (鳞滝左近次)
+
+图片要求：
+- 格式：JPG
+- 尺寸：建议 200x200 像素或更大
+- 文件名必须与上面列表完全一致
+
+如果暂时没有图片，系统会自动使用占位符图片。

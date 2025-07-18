@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>鬼灭之刃 - 每日金句</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>鬼灭之刃 每日金句</h1>
+            <p class="date" id="currentDate"></p>
+        </header>
+        
+        <main class="quote-section">
+            <div class="character-card">
+                <img id="characterImage" src="" alt="角色头像" class="character-image">
+                <h2 id="characterName" class="character-name"></h2>
+            </div>
+            
+            <div class="quote-card">
+                <blockquote id="dailyQuote" class="quote-text"></blockquote>
+            </div>
+            
+            <div class="actions">
+                <button id="newQuoteBtn" class="btn">换一句</button>
+                <button id="favoriteBtn" class="btn favorite">❤️ 收藏</button>
+            </div>
+        </main>
+        
+        <footer>
+            <div class="favorites-section">
+                <h3>我的收藏</h3>
+                <div id="favoritesList" class="favorites-list"></div>
+            </div>
+            <div class="love-message">
+                <p>叩叩用心做给魔魔的 ❤️</p>
+            </div>
+        </footer>
+    </div>
+    
+    <script src="quotes.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
