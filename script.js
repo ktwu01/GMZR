@@ -163,15 +163,23 @@ function displayFavorites() {
     const favoritesList = document.getElementById('favoritesList');
     
     if (favorites.length === 0) {
-        favoritesList.innerHTML = '<div class="empty-favorites">还没有收藏任何金句哦～</div>';
+        favoritesList.innerHTML = '<div class="empty-favorites">还没有收藏任何金句哦～<br>开始收藏你喜欢的名言吧！</div>';
         return;
     }
     
-    favoritesList.innerHTML = favorites.map(favorite => `
+    // 按收藏时间倒序排列（最新的在前面）
+    const sortedFavorites = [...favorites].reverse();
+    
+    favoritesList.innerHTML = sortedFavorites.map((favorite, index) => `
         <div class="favorite-item">
-            <div class="character">${favorite.character}</div>
-            <div class="quote">"${favorite.quote}"</div>
-            <div style="font-size: 0.8rem; color: #999; margin-top: 5px;">收藏于: ${favorite.date}</div>
+            <div class="favorite-content">
+                <div class="character">${favorite.character}</div>
+                <div class="quote">"${favorite.quote}"</div>
+                <div class="favorite-date">收藏于: ${favorite.date}</div>
+            </div>
+            <button class="remove-btn" onclick="removeFavorite(${favorites.length - 1 - index})" title="删除收藏">
+                🗑️
+            </button>
         </div>
     `).join('');
 }
@@ -518,5 +526,24 @@ function mergeFavorites(importedFavorites) {
     
     if (addedCount < importedFavorites.length) {
         alert(`导入完成！新增 ${addedCount} 条收藏，跳过 ${importedFavorites.length - addedCount} 条重复收藏。`);
+    }
+}
+
+// 删除收藏
+function removeFavorite(index) {
+    if (index < 0 || index >= favorites.length) return;
+    
+    const favorite = favorites[index];
+    if (confirm(`确定要删除这条收藏吗？\n\n${favorite.character}: "${favorite.quote}"`)) {
+        favorites.splice(index, 1);
+        localStorage.setItem('demonSlayerFavorites', JSON.stringify(favorites));
+        displayFavorites();
+        
+        // 如果删除的是当前显示的金句，更新收藏按钮状态
+        if (currentQuote && 
+            currentQuote.character === favorite.character && 
+            currentQuote.quote === favorite.quote) {
+            updateFavoriteButton();
+        }
     }
 }
