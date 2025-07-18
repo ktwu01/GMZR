@@ -10,16 +10,47 @@ function getImagePath(imagePath, characterName) {
 
 // 生成占位符图片
 function getPlaceholderImage(characterName) {
-    const colors = [
-        '#667eea', '#ff6b6b', '#ffd93d', '#6bcf7f', '#4a90e2',
-        '#bd10e0', '#f5a623', '#9013fe', '#50e3c2', '#f8e71c',
-        '#7ed321', '#d0021b', '#8b572a', '#417505', '#9b9b9b'
-    ];
-    const colorIndex = characterName.length % colors.length;
-    const color = colors[colorIndex].replace('#', '');
+    // 为不同角色定制颜色主题
+    const characterColors = {
+        '竈门炭治郎': '#2d5a87', // 深蓝色 - 水之呼吸
+        '竈门祢豆子': '#ff69b4', // 粉红色 - 可爱
+        '我妻善逸': '#ffd700', // 金黄色 - 雷之呼吸
+        '嘴平伊之助': '#8b4513', // 棕色 - 野性
+        '富冈义勇': '#4682b4', // 钢蓝色 - 水柱
+        '胡蝶忍': '#9370db', // 紫色 - 虫柱
+        '炼狱杏寿郎': '#ff4500', // 橙红色 - 炎柱
+        '宇髄天元': '#ff1493', // 深粉色 - 华丽
+        '时透无一郎': '#b0c4de', // 浅钢蓝 - 霞柱
+        '甘露寺蜜璃': '#ff69b4', // 热粉色 - 恋柱
+        '伊黑小芭内': '#2f4f2f', // 深绿色 - 蛇柱
+        '不死川实弥': '#696969', // 暗灰色 - 风柱
+        '悲鸣屿行冥': '#8b4513', // 棕色 - 岩柱
+        '产屋敷耀哉': '#dda0dd', // 淡紫色 - 优雅
+        '鳞滝左近次': '#4682b4', // 钢蓝色 - 前水柱
+        '鬼舞辻无惨': '#8b0000', // 暗红色 - 邪恶
+        '上弦之壹・黑死牟': '#2f2f2f', // 深灰色
+        '上弦之贰・童磨': '#e6e6fa', // 淡紫色
+        '上弦之参・猗窩座': '#ff6347', // 番茄红
+        '珠世': '#dda0dd', // 淡紫色
+        '愈史郎': '#90ee90'  // 浅绿色
+    };
+    
+    // 获取角色专属颜色，如果没有则使用默认颜色
+    let color = characterColors[characterName];
+    if (!color) {
+        const defaultColors = [
+            '#667eea', '#ff6b6b', '#ffd93d', '#6bcf7f', '#4a90e2',
+            '#bd10e0', '#f5a623', '#9013fe', '#50e3c2', '#f8e71c'
+        ];
+        const colorIndex = characterName.length % defaultColors.length;
+        color = defaultColors[colorIndex];
+    }
+    
+    const colorHex = color.replace('#', '');
     const encodedName = encodeURIComponent(characterName);
     
-    return `https://via.placeholder.com/200x200/${color}/ffffff?text=${encodedName}`;
+    // 使用更好的占位符服务，添加字体和样式
+    return `https://via.placeholder.com/200x200/${colorHex}/ffffff?text=${encodedName}&font=Source+Sans+Pro`;
 }
 
 let currentQuote = null;
