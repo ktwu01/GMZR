@@ -4,12 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>鬼灭之刃 - 每日金句</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- 动态背景层 -->
+    <div class="bg-aurora" aria-hidden="true">
+        <div class="aurora-blob blob-1"></div>
+        <div class="aurora-blob blob-2"></div>
+        <div class="aurora-blob blob-3"></div>
+    </div>
+    <div class="particles" id="particles" aria-hidden="true"></div>
+
     <div class="container">
         <header>
-            <h1>鬼灭之刃 每日金句</h1>
+            <div class="title-wrap">
+                <span class="title-deco">✦ 鬼滅の刃 ✦</span>
+                <h1>鬼灭之刃 每日金句</h1>
+                <div class="katana-divider" aria-hidden="true">
+                    <span class="divider-line"></span>
+                    <span class="divider-gem">⚔</span>
+                    <span class="divider-line"></span>
+                </div>
+            </div>
             <p class="date" id="currentDate"></p>
             <div class="theme-selector">
                 <button id="themeBtn" class="theme-btn">🎨 切换主题</button>
@@ -17,26 +36,32 @@
             </div>
             <div class="checkin-status" id="checkinStatus"></div>
         </header>
-        
+
         <main class="quote-section">
+            <div class="section-glow" aria-hidden="true"></div>
             <div class="character-card">
-                <img id="characterImage" src="" alt="角色头像" class="character-image">
+                <div class="avatar-wrap">
+                    <span class="avatar-ring" aria-hidden="true"></span>
+                    <img id="characterImage" src="" alt="角色头像" class="character-image">
+                </div>
                 <h2 id="characterName" class="character-name"></h2>
             </div>
-            
+
             <div class="quote-card">
+                <span class="quote-mark quote-mark-open" aria-hidden="true">「</span>
                 <blockquote id="dailyQuote" class="quote-text"></blockquote>
+                <span class="quote-mark quote-mark-close" aria-hidden="true">」</span>
             </div>
-            
+
             <div class="actions">
-                <button id="newQuoteBtn" class="btn">换一句</button>
-                <button id="favoriteBtn" class="btn favorite">❤️ 收藏</button>
+                <button id="newQuoteBtn" class="btn"><span class="btn-shine"></span>⚡ 换一句</button>
+                <button id="favoriteBtn" class="btn favorite"><span class="btn-shine"></span>❤️ 收藏</button>
             </div>
         </main>
-        
+
         <footer>
             <div class="favorites-section">
-                <h3>我的收藏</h3>
+                <h3><span class="heading-deco">❖</span> 我的收藏 <span class="heading-deco">❖</span></h3>
                 <div class="favorites-controls">
                     <button id="exportBtn" class="control-btn">📤 导出收藏</button>
                     <button id="importBtn" class="control-btn">📥 导入收藏</button>
@@ -45,11 +70,15 @@
                 <div id="favoritesList" class="favorites-list"></div>
             </div>
             <div class="love-message">
+                <span class="love-sparkle" aria-hidden="true">✨</span>
                 <p>叩叩用心做给魔魔的 ❤️</p>
+                <span class="love-sparkle" aria-hidden="true">✨</span>
             </div>
         </footer>
     </div>
-    
+
+    <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
     <script src="quotes.js"></script>
     <script src="script.js"></script>
 </body>
