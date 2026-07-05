@@ -1,540 +1,876 @@
+/* ============================================
+   鬼灭之刃 每日金句 — 华丽版 UI
+   基于 CSS 变量的主题系统 + 玻璃拟态 + 动效
+   ============================================ */
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* ---------- 主题变量 ---------- */
 body {
-    font-family: 'Microsoft YaHei', sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    min-height: 100vh;
-    color: #333;
-    transition: background 0.5s ease;
+    /* 默认主题 - 紫色幻境 */
+    --grad-1: #1a1440;
+    --grad-2: #667eea;
+    --grad-3: #764ba2;
+    --accent: #8f9dff;
+    --accent-strong: #667eea;
+    --accent-glow: rgba(143, 157, 255, 0.55);
+    --card-bg: rgba(255, 255, 255, 0.88);
+    --card-border: rgba(255, 255, 255, 0.55);
+    --quote-bg: rgba(102, 126, 234, 0.08);
+    --text-main: #2b2b45;
+    --text-muted: #7a7a99;
+    --header-text: #ffffff;
+    --gold: #ffd700;
 }
 
+body.theme-flame {
+    --grad-1: #3d0c02;
+    --grad-2: #ff6b35;
+    --grad-3: #ffb802;
+    --accent: #ff8c42;
+    --accent-strong: #ff5722;
+    --accent-glow: rgba(255, 120, 50, 0.55);
+    --quote-bg: rgba(255, 107, 53, 0.09);
+}
+
+body.theme-water {
+    --grad-1: #041f3d;
+    --grad-2: #2478dd;
+    --grad-3: #00d4fe;
+    --accent: #4facfe;
+    --accent-strong: #2288ee;
+    --accent-glow: rgba(79, 172, 254, 0.55);
+    --quote-bg: rgba(79, 172, 254, 0.09);
+}
+
+body.theme-sakura {
+    --grad-1: #5c2438;
+    --grad-2: #ff9a9e;
+    --grad-3: #ffdde1;
+    --accent: #ff8a9e;
+    --accent-strong: #f56a86;
+    --accent-glow: rgba(255, 138, 158, 0.55);
+    --quote-bg: rgba(255, 138, 158, 0.10);
+}
+
+body.theme-dark {
+    --grad-1: #0b0e1a;
+    --grad-2: #1c2841;
+    --grad-3: #30456b;
+    --accent: #6db3f2;
+    --accent-strong: #3498db;
+    --accent-glow: rgba(109, 179, 242, 0.45);
+    --card-bg: rgba(24, 32, 54, 0.82);
+    --card-border: rgba(120, 160, 220, 0.22);
+    --quote-bg: rgba(109, 179, 242, 0.08);
+    --text-main: #e8eefc;
+    --text-muted: #93a3c4;
+}
+
+/* ---------- 基础布局 ---------- */
+body {
+    font-family: 'Noto Serif SC', 'Microsoft YaHei', serif;
+    min-height: 100vh;
+    color: var(--text-main);
+    background: var(--grad-1);
+    transition: background 0.8s ease;
+    overflow-x: hidden;
+}
+
+/* ---------- 极光背景层 ---------- */
+.bg-aurora {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+    background: linear-gradient(160deg, var(--grad-1) 0%, var(--grad-2) 55%, var(--grad-3) 100%);
+    transition: background 0.8s ease;
+}
+
+.aurora-blob {
+    position: absolute;
+    width: 55vmax;
+    height: 55vmax;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: 0.5;
+    mix-blend-mode: soft-light;
+    transition: background 0.8s ease;
+}
+
+.blob-1 {
+    background: radial-gradient(circle, var(--accent) 0%, transparent 65%);
+    top: -20vmax;
+    left: -12vmax;
+    animation: blobDrift 26s ease-in-out infinite alternate;
+}
+
+.blob-2 {
+    background: radial-gradient(circle, var(--grad-3) 0%, transparent 65%);
+    bottom: -22vmax;
+    right: -14vmax;
+    animation: blobDrift 32s ease-in-out infinite alternate-reverse;
+}
+
+.blob-3 {
+    background: radial-gradient(circle, #ffffff 0%, transparent 60%);
+    top: 30%;
+    left: 40%;
+    width: 32vmax;
+    height: 32vmax;
+    opacity: 0.22;
+    animation: blobPulse 18s ease-in-out infinite;
+}
+
+@keyframes blobDrift {
+    0%   { transform: translate(0, 0) scale(1); }
+    50%  { transform: translate(6vmax, -4vmax) scale(1.15); }
+    100% { transform: translate(-4vmax, 5vmax) scale(0.95); }
+}
+
+@keyframes blobPulse {
+    0%, 100% { transform: scale(1); opacity: 0.16; }
+    50%      { transform: scale(1.25); opacity: 0.3; }
+}
+
+/* ---------- 漂浮粒子 ---------- */
+.particles {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.particle {
+    position: absolute;
+    bottom: -8vh;
+    font-size: 1rem;
+    opacity: 0;
+    animation: floatUp linear infinite;
+    text-shadow: 0 0 12px var(--accent-glow);
+    will-change: transform, opacity;
+}
+
+@keyframes floatUp {
+    0%   { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
+    8%   { opacity: 0.85; }
+    85%  { opacity: 0.5; }
+    100% { transform: translateY(-115vh) translateX(6vw) rotate(320deg); opacity: 0; }
+}
+
+/* ---------- 容器 ---------- */
 .container {
-    max-width: 800px;
+    position: relative;
+    z-index: 2;
+    max-width: 820px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 34px 20px 40px;
     transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
+/* ---------- 头部 ---------- */
 header {
     text-align: center;
-    margin-bottom: 30px;
-    color: white;
+    margin-bottom: 34px;
+    color: var(--header-text);
+    animation: fadeSlideDown 0.9s ease both;
+}
+
+.title-deco {
+    display: inline-block;
+    font-size: 0.95rem;
+    letter-spacing: 0.5em;
+    text-indent: 0.5em;
+    color: var(--gold);
+    text-shadow: 0 0 14px rgba(255, 215, 0, 0.6);
+    margin-bottom: 6px;
+    animation: glowPulse 3s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+    0%, 100% { text-shadow: 0 0 8px rgba(255, 215, 0, 0.45); }
+    50%      { text-shadow: 0 0 20px rgba(255, 215, 0, 0.9); }
 }
 
 header h1 {
-    font-size: 2.5rem;
-    margin-bottom: 10px;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    font-family: 'Ma Shan Zheng', 'Noto Serif SC', cursive;
+    font-size: 3.2rem;
+    font-weight: 400;
+    line-height: 1.2;
+    background: linear-gradient(180deg, #ffffff 20%, rgba(255,255,255,0.65) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.35));
+}
+
+.katana-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin: 12px auto 16px;
+    max-width: 340px;
+}
+
+.divider-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.85), transparent);
+}
+
+.divider-gem {
+    font-size: 1rem;
+    color: var(--gold);
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+    animation: spinSlow 8s linear infinite;
+}
+
+@keyframes spinSlow {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
 }
 
 .date {
-    font-size: 1.1rem;
-    opacity: 0.9;
+    font-size: 1.05rem;
+    letter-spacing: 0.12em;
+    opacity: 0.92;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
 }
 
-.quote-section {
-    background: white;
-    border-radius: 20px;
-    padding: 30px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    margin-bottom: 30px;
+/* ---------- 头部按钮 ---------- */
+.theme-selector {
+    margin-top: 18px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
 }
 
-.character-card {
+.theme-btn,
+.checkin-btn {
+    background: rgba(255, 255, 255, 0.14);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.38);
+    border-radius: 999px;
+    padding: 10px 22px;
+    font-size: 0.92rem;
+    font-family: inherit;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+.theme-btn:hover,
+.checkin-btn:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.28);
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 8px 26px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+.checkin-btn.checked-in {
+    background: linear-gradient(135deg, rgba(76, 175, 80, 0.85), rgba(56, 142, 60, 0.85));
+    border-color: rgba(129, 199, 132, 0.9);
+    cursor: default;
+}
+
+.checkin-status {
+    margin-top: 16px;
     text-align: center;
-    margin-bottom: 25px;
+    color: #fff;
+    font-size: 0.9rem;
+}
+
+.streak-info {
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    border-radius: 999px;
+    padding: 8px 20px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    display: inline-block;
+    box-shadow: 0 3px 14px rgba(0, 0, 0, 0.15);
+}
+
+.streak-number {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--gold);
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+}
+
+/* ---------- 金句主卡片 ---------- */
+.quote-section {
+    position: relative;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 28px;
+    padding: 40px 34px 36px;
+    box-shadow:
+        0 24px 60px rgba(0, 0, 0, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    margin-bottom: 30px;
+    overflow: hidden;
+    animation: fadeSlideUp 0.9s 0.15s ease both;
+    transition: background 0.6s ease, border-color 0.6s ease;
+}
+
+/* 卡片顶部的主题色光带 */
+.quote-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 10%;
+    right: 10%;
+    height: 3px;
+    border-radius: 0 0 6px 6px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    box-shadow: 0 0 18px var(--accent-glow);
+    transition: background 0.6s ease;
+}
+
+.section-glow {
+    position: absolute;
+    top: -60px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 320px;
+    height: 160px;
+    background: radial-gradient(ellipse at center, var(--accent-glow) 0%, transparent 70%);
+    opacity: 0.35;
+    pointer-events: none;
+    transition: background 0.6s ease;
+}
+
+/* ---------- 角色 ---------- */
+.character-card {
+    position: relative;
+    text-align: center;
+    margin-bottom: 26px;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.avatar-wrap {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 16px;
+}
+
+.avatar-ring {
+    position: absolute;
+    inset: -9px;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, var(--accent), transparent 30%, var(--accent) 50%, transparent 80%, var(--accent));
+    animation: spinSlow 6s linear infinite;
+    filter: blur(1px);
+    opacity: 0.9;
+    transition: background 0.6s ease;
+}
+
+.avatar-wrap::after {
+    /* 遮出圆环内圈 */
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    box-shadow: 0 0 30px var(--accent-glow);
+    pointer-events: none;
+    transition: box-shadow 0.6s ease;
 }
 
 .character-image {
-    width: 120px;
-    height: 120px;
+    position: relative;
+    z-index: 1;
+    width: 132px;
+    height: 132px;
     border-radius: 50%;
     object-fit: cover;
-    border: 4px solid #667eea;
-    margin-bottom: 15px;
-    transition: transform 0.3s ease;
+    border: 4px solid var(--card-bg);
+    display: block;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .character-image:hover {
-    transform: scale(1.05);
+    transform: scale(1.08) rotate(2deg);
 }
 
 .character-name {
-    font-size: 1.5rem;
-    color: #667eea;
-    margin-bottom: 20px;
+    font-family: 'Ma Shan Zheng', 'Noto Serif SC', cursive;
+    font-size: 1.9rem;
+    font-weight: 400;
+    color: var(--accent-strong);
+    letter-spacing: 0.08em;
+    text-shadow: 0 2px 12px var(--accent-glow);
+    transition: color 0.6s ease;
 }
 
+/* ---------- 金句 ---------- */
 .quote-card {
-    background: #f8f9ff;
-    border-radius: 15px;
-    padding: 25px;
-    margin-bottom: 25px;
-    border-left: 5px solid #667eea;
+    position: relative;
+    background: var(--quote-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    padding: 34px 44px;
+    margin-bottom: 28px;
+    transition: transform 0.3s ease, opacity 0.3s ease, background 0.6s ease;
 }
+
+.quote-mark {
+    position: absolute;
+    font-family: 'Noto Serif SC', serif;
+    font-size: 2.6rem;
+    font-weight: 700;
+    color: var(--accent);
+    opacity: 0.55;
+    line-height: 1;
+    transition: color 0.6s ease;
+}
+
+.quote-mark-open  { top: 10px; left: 14px; }
+.quote-mark-close { bottom: 10px; right: 14px; }
 
 .quote-text {
-    font-size: 1.3rem;
-    line-height: 1.6;
-    color: #444;
-    font-style: italic;
+    font-size: 1.35rem;
+    line-height: 1.9;
+    color: var(--text-main);
     text-align: center;
+    letter-spacing: 0.03em;
+    transition: color 0.6s ease;
 }
 
+/* ---------- 操作按钮 ---------- */
 .actions {
     display: flex;
-    gap: 15px;
+    gap: 16px;
     justify-content: center;
     flex-wrap: wrap;
 }
 
 .btn {
-    padding: 12px 25px;
+    position: relative;
+    padding: 13px 34px;
     border: none;
-    border-radius: 25px;
-    font-size: 1rem;
+    border-radius: 999px;
+    font-size: 1.02rem;
+    font-family: inherit;
+    font-weight: 700;
+    letter-spacing: 0.06em;
     cursor: pointer;
+    overflow: hidden;
     transition: all 0.3s ease;
-    font-weight: bold;
+    color: #fff;
 }
 
 .btn:first-child {
-    background: #667eea;
-    color: white;
+    background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+    box-shadow: 0 8px 24px var(--accent-glow);
 }
 
 .btn:first-child:hover {
-    background: #5a6fd8;
-    transform: translateY(-2px);
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 14px 32px var(--accent-glow);
 }
 
 .favorite {
-    background: #ff6b6b;
-    color: white;
+    background: linear-gradient(135deg, #ff8a8a, #ff5252);
+    box-shadow: 0 8px 24px rgba(255, 107, 107, 0.45);
 }
 
 .favorite:hover {
-    background: #ff5252;
-    transform: translateY(-2px);
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 14px 32px rgba(255, 107, 107, 0.55);
 }
 
 .favorite.active {
-    background: #4caf50;
+    background: linear-gradient(135deg, #66bb6a, #43a047);
+    box-shadow: 0 8px 24px rgba(76, 175, 80, 0.45);
 }
 
+/* 按钮流光扫过效果 */
+.btn-shine {
+    position: absolute;
+    top: 0;
+    left: -80%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(105deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+    transform: skewX(-20deg);
+    pointer-events: none;
+    animation: shineSweep 4s ease-in-out infinite;
+}
+
+@keyframes shineSweep {
+    0%, 60%  { left: -80%; }
+    100%     { left: 140%; }
+}
+
+.btn:active {
+    transform: translateY(0) scale(0.97);
+}
+
+/* ---------- 收藏区 ---------- */
 footer {
-    background: white;
-    border-radius: 20px;
-    padding: 25px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 28px;
+    padding: 30px 28px;
+    box-shadow: 0 16px 44px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    animation: fadeSlideUp 0.9s 0.3s ease both;
+    transition: background 0.6s ease, border-color 0.6s ease, transform 0.3s ease, opacity 0.3s ease;
 }
 
 footer h3 {
-    color: #667eea;
-    margin-bottom: 15px;
+    color: var(--accent-strong);
+    margin-bottom: 18px;
     text-align: center;
+    font-size: 1.3rem;
+    letter-spacing: 0.1em;
+    transition: color 0.6s ease;
+}
+
+.heading-deco {
+    font-size: 0.8rem;
+    opacity: 0.7;
+    margin: 0 6px;
 }
 
 .favorites-controls {
     display: flex;
-    gap: 10px;
+    gap: 12px;
     justify-content: center;
     margin-bottom: 20px;
     flex-wrap: wrap;
 }
 
 .control-btn {
-    padding: 8px 16px;
-    border: none;
-    border-radius: 20px;
+    padding: 9px 20px;
+    border: 1px solid var(--card-border);
+    border-radius: 999px;
     font-size: 0.9rem;
+    font-family: inherit;
+    font-weight: 700;
     cursor: pointer;
     transition: all 0.3s ease;
-    font-weight: bold;
-    background: #667eea;
+    background: linear-gradient(135deg, var(--accent), var(--accent-strong));
     color: white;
+    box-shadow: 0 5px 16px var(--accent-glow);
 }
 
 .control-btn:hover {
-    background: #5a6fd8;
     transform: translateY(-2px);
+    box-shadow: 0 9px 22px var(--accent-glow);
 }
 
 .favorites-list {
-    max-height: 300px;
+    max-height: 340px;
     overflow-y: auto;
+    padding-right: 4px;
+}
+
+/* 自定义滚动条 */
+.favorites-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.favorites-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.favorites-list::-webkit-scrollbar-thumb {
+    background: var(--accent);
+    border-radius: 8px;
+    opacity: 0.6;
 }
 
 .favorite-item {
-    background: #f8f9ff;
-    border-radius: 10px;
-    padding: 15px;
-    margin-bottom: 10px;
-    border-left: 3px solid #667eea;
+    background: var(--quote-bg);
+    border: 1px solid var(--card-border);
+    border-left: 4px solid var(--accent);
+    border-radius: 14px;
+    padding: 16px 18px;
+    margin-bottom: 12px;
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     position: relative;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    animation: fadeSlideUp 0.5s ease both;
+}
+
+.favorite-item:hover {
+    transform: translateX(4px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
 }
 
 .favorite-content {
     flex: 1;
-    margin-right: 10px;
+    margin-right: 12px;
 }
 
 .favorite-item .character {
-    font-weight: bold;
-    color: #667eea;
-    margin-bottom: 5px;
+    font-weight: 700;
+    color: var(--accent-strong);
+    margin-bottom: 6px;
+    letter-spacing: 0.04em;
 }
 
 .favorite-item .quote {
-    font-style: italic;
-    color: #666;
-    margin-bottom: 5px;
+    color: var(--text-main);
+    opacity: 0.85;
+    margin-bottom: 6px;
+    line-height: 1.7;
 }
 
 .favorite-date {
-    font-size: 0.8rem;
-    color: #999;
-    margin-top: 5px;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-top: 4px;
 }
 
 .remove-btn {
-    background: #ff6b6b;
+    background: linear-gradient(135deg, #ff8a8a, #ff5252);
     border: none;
     border-radius: 50%;
-    width: 30px;
-    height: 30px;
+    width: 32px;
+    height: 32px;
     cursor: pointer;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
     flex-shrink: 0;
+    box-shadow: 0 3px 10px rgba(255, 82, 82, 0.4);
 }
 
 .remove-btn:hover {
-    background: #ff5252;
-    transform: scale(1.1);
+    transform: scale(1.15) rotate(8deg);
+    box-shadow: 0 5px 14px rgba(255, 82, 82, 0.55);
 }
 
 .empty-favorites {
     text-align: center;
-    color: #999;
-    font-style: italic;
-    padding: 20px;
+    color: var(--text-muted);
+    padding: 28px 16px;
+    line-height: 1.9;
 }
 
+/* ---------- 爱心留言 ---------- */
 .love-message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
     text-align: center;
-    margin-top: 20px;
-    padding: 15px;
-    background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
-    border-radius: 15px;
-    box-shadow: 0 3px 10px rgba(255, 107, 107, 0.3);
+    margin-top: 22px;
+    padding: 16px;
+    background: linear-gradient(120deg, #ff6b6b, #ff8e8e, #ff6b9d);
+    background-size: 200% 200%;
+    animation: gradientShift 6s ease infinite;
+    border-radius: 18px;
+    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+}
+
+@keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50%      { background-position: 100% 50%; }
 }
 
 .love-message p {
     color: white;
-    font-size: 1rem;
-    font-weight: bold;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
     margin: 0;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
 }
 
-/* 主题切换按钮 */
-.theme-selector {
-    margin-top: 15px;
+.love-sparkle {
+    animation: sparkleTwinkle 1.8s ease-in-out infinite;
 }
 
-.theme-btn {
-    background: rgba(255, 255, 255, 0.2);
-    color: white;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    border-radius: 20px;
-    padding: 8px 16px;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
+.love-sparkle:last-child {
+    animation-delay: 0.9s;
 }
 
-.theme-btn:hover {
-    background: rgba(255, 255, 255, 0.3);
-    transform: translateY(-2px);
+@keyframes sparkleTwinkle {
+    0%, 100% { opacity: 0.4; transform: scale(0.85); }
+    50%      { opacity: 1; transform: scale(1.15); }
 }
 
-.checkin-btn {
-    background: rgba(255, 255, 255, 0.2);
-    color: white;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    border-radius: 20px;
-    padding: 8px 16px;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
-    margin-left: 10px;
+/* ---------- Toast 通知 ---------- */
+.toast-container {
+    position: fixed;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    pointer-events: none;
+    width: min(92vw, 420px);
 }
 
-.checkin-btn:hover {
-    background: rgba(255, 255, 255, 0.3);
-    transform: translateY(-2px);
-}
-
-.checkin-btn.checked-in {
-    background: rgba(76, 175, 80, 0.8);
-    border-color: rgba(76, 175, 80, 0.9);
-}
-
-.checkin-status {
-    margin-top: 15px;
+.toast {
+    background: rgba(20, 24, 40, 0.88);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 999px;
+    padding: 12px 26px;
+    font-size: 0.95rem;
+    letter-spacing: 0.03em;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35), 0 0 20px var(--accent-glow);
+    animation: toastIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
     text-align: center;
-    color: white;
-    font-size: 0.9rem;
+    max-width: 100%;
 }
 
-.streak-info {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 15px;
-    padding: 10px 15px;
-    backdrop-filter: blur(10px);
-    display: inline-block;
+.toast.toast-out {
+    animation: toastOut 0.35s ease both;
 }
 
-.streak-number {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #ffd700;
+@keyframes toastIn {
+    from { opacity: 0; transform: translateY(-24px) scale(0.9); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-/* 主题样式 */
-/* 默认主题 - 紫色渐变 */
-body.theme-default {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+@keyframes toastOut {
+    from { opacity: 1; transform: translateY(0) scale(1); }
+    to   { opacity: 0; transform: translateY(-16px) scale(0.92); }
 }
 
-/* 火焰主题 - 炼狱杏寿郎 */
-body.theme-flame {
-    background: linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #ffcc02 100%);
+/* ---------- 入场动画 ---------- */
+@keyframes fadeSlideDown {
+    from { opacity: 0; transform: translateY(-26px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
-body.theme-flame .quote-section {
-    border: 2px solid #ff6b35;
+@keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(26px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
-body.theme-flame .character-image {
-    border-color: #ff6b35;
+/* ---------- 动效偏好 ---------- */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    .particles { display: none; }
 }
 
-body.theme-flame .quote-card {
-    background: #fff8f0;
-    border-left-color: #ff6b35;
-}
-
-body.theme-flame .character-name {
-    color: #ff6b35;
-}
-
-body.theme-flame .btn:first-child {
-    background: #ff6b35;
-}
-
-body.theme-flame .btn:first-child:hover {
-    background: #e55a2b;
-}
-
-/* 水之主题 - 富冈义勇 */
-body.theme-water {
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-}
-
-body.theme-water .quote-section {
-    border: 2px solid #4facfe;
-}
-
-body.theme-water .character-image {
-    border-color: #4facfe;
-}
-
-body.theme-water .quote-card {
-    background: #f0f8ff;
-    border-left-color: #4facfe;
-}
-
-body.theme-water .character-name {
-    color: #4facfe;
-}
-
-body.theme-water .btn:first-child {
-    background: #4facfe;
-}
-
-body.theme-water .btn:first-child:hover {
-    background: #3d8bfe;
-}
-
-/* 樱花主题 - 甘露寺蜜璃 */
-body.theme-sakura {
-    background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
-}
-
-body.theme-sakura .quote-section {
-    border: 2px solid #ff9a9e;
-}
-
-body.theme-sakura .character-image {
-    border-color: #ff9a9e;
-}
-
-body.theme-sakura .quote-card {
-    background: #fff5f5;
-    border-left-color: #ff9a9e;
-}
-
-body.theme-sakura .character-name {
-    color: #ff9a9e;
-}
-
-body.theme-sakura .btn:first-child {
-    background: #ff9a9e;
-}
-
-body.theme-sakura .btn:first-child:hover {
-    background: #ff8a8e;
-}
-
-/* 夜间主题 */
-body.theme-dark {
-    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-}
-
-body.theme-dark .quote-section {
-    background: #34495e;
-    color: #ecf0f1;
-    border: 2px solid #3498db;
-}
-
-body.theme-dark .character-image {
-    border-color: #3498db;
-}
-
-body.theme-dark .quote-card {
-    background: #2c3e50;
-    border-left-color: #3498db;
-}
-
-body.theme-dark .quote-text {
-    color: #ecf0f1;
-}
-
-body.theme-dark .character-name {
-    color: #3498db;
-}
-
-body.theme-dark .btn:first-child {
-    background: #3498db;
-}
-
-body.theme-dark .btn:first-child:hover {
-    background: #2980b9;
-}
-
-body.theme-dark footer {
-    background: #34495e;
-    color: #ecf0f1;
-}
-
-body.theme-dark footer h3 {
-    color: #3498db;
-}
-
-body.theme-dark .favorite-item {
-    background: #2c3e50;
-    border-left-color: #3498db;
-}
-
-body.theme-dark .favorite-item .character {
-    color: #3498db;
-}
-
-body.theme-dark .favorite-item .quote {
-    color: #bdc3c7;
-}
-
+/* ---------- 移动端适配 ---------- */
 @media (max-width: 600px) {
     .container {
-        padding: 15px;
+        padding: 24px 14px 32px;
     }
-    
+
     header h1 {
-        font-size: 2rem;
+        font-size: 2.3rem;
     }
-    
+
+    .title-deco {
+        font-size: 0.8rem;
+        letter-spacing: 0.3em;
+    }
+
     .theme-selector {
-        display: flex;
         flex-direction: column;
-        gap: 10px;
         align-items: center;
+        gap: 10px;
     }
-    
+
     .theme-btn, .checkin-btn {
         margin: 0;
-        width: 200px;
+        width: 220px;
     }
-    
+
     .quote-section {
-        padding: 20px;
+        padding: 28px 20px 26px;
+        border-radius: 22px;
     }
-    
+
     .character-image {
-        width: 100px;
-        height: 100px;
+        width: 108px;
+        height: 108px;
     }
-    
+
+    .character-name {
+        font-size: 1.6rem;
+    }
+
+    .quote-card {
+        padding: 28px 26px;
+    }
+
     .quote-text {
-        font-size: 1.1rem;
+        font-size: 1.12rem;
     }
-    
+
+    .quote-mark {
+        font-size: 2rem;
+    }
+
     .actions {
         flex-direction: column;
         align-items: center;
     }
-    
+
     .btn {
-        width: 200px;
+        width: 220px;
     }
-    
+
+    footer {
+        padding: 24px 18px;
+        border-radius: 22px;
+    }
+
     .favorites-controls {
         flex-direction: column;
         align-items: center;
     }
-    
+
     .control-btn {
-        width: 200px;
+        width: 220px;
     }
-    
+
     .favorite-item {
         flex-direction: column;
         align-items: flex-start;
     }
-    
+
     .favorite-content {
         margin-right: 0;
         margin-bottom: 10px;
         width: 100%;
     }
-    
+
     .remove-btn {
         align-self: flex-end;
         position: absolute;
-        top: 10px;
-        right: 10px;
+        top: 12px;
+        right: 12px;
+    }
+
+    .aurora-blob {
+        filter: blur(60px);
     }
 }

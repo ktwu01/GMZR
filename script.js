@@ -46,11 +46,69 @@ function getPlaceholderImage(characterName) {
         color = defaultColors[colorIndex];
     }
     
-    const colorHex = color.replace('#', '');
-    const encodedName = encodeURIComponent(characterName);
-    
-    // 使用更好的占位符服务，添加字体和样式
-    return `https://via.placeholder.com/200x200/${colorHex}/ffffff?text=${encodedName}&font=Source+Sans+Pro`;
+    // 生成本地 SVG 占位头像（渐变背景 + 角色名首字），无需网络
+    const shortName = characterName.replace(/^上弦之[壹贰参]・/, '').slice(0, 2);
+    const svg = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+            <defs>
+                <radialGradient id="g" cx="35%" cy="30%" r="80%">
+                    <stop offset="0%" stop-color="${color}" stop-opacity="0.75"/>
+                    <stop offset="100%" stop-color="${color}"/>
+                </radialGradient>
+            </defs>
+            <rect width="200" height="200" fill="url(#g)"/>
+            <circle cx="100" cy="100" r="88" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="2"/>
+            <text x="100" y="100" text-anchor="middle" dominant-baseline="central"
+                font-family="'Noto Serif SC','Microsoft YaHei',serif" font-size="64"
+                fill="#ffffff" style="text-shadow:0 2px 6px rgba(0,0,0,0.4)">${shortName}</text>
+        </svg>`;
+    return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+}
+
+// Toast 通知（替代 alert）
+function showToast(message, duration = 2600) {
+    const container = document.getElementById('toastContainer');
+    if (!container) {
+        alert(message);
+        return;
+    }
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.textContent = message;
+    container.appendChild(toast);
+    setTimeout(() => {
+        toast.classList.add('toast-out');
+        toast.addEventListener('animationend', () => toast.remove(), { once: true });
+    }, duration);
+}
+
+// 主题漂浮粒子
+const themeParticles = {
+    default: ['✦', '💜', '✨'],
+    flame: ['🔥', '✦', '🧡'],
+    water: ['💧', '❄', '✦'],
+    sakura: ['🌸', '💮', '🌺'],
+    dark: ['⭐', '🌙', '✦']
+};
+
+function renderParticles(themeName) {
+    const container = document.getElementById('particles');
+    if (!container) return;
+
+    container.innerHTML = '';
+    const symbols = themeParticles[themeName] || themeParticles.default;
+    const count = window.innerWidth < 600 ? 12 : 20;
+
+    for (let i = 0; i < count; i++) {
+        const particle = document.createElement('span');
+        particle.className = 'particle';
+        particle.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.fontSize = `${0.6 + Math.random() * 1.1}rem`;
+        particle.style.animationDuration = `${9 + Math.random() * 14}s`;
+        particle.style.animationDelay = `${-Math.random() * 20}s`;
+        container.appendChild(particle);
+    }
 }
 
 let currentQuote = null;
@@ -202,7 +260,7 @@ function displayFavorites() {
     const sortedFavorites = [...favorites].reverse();
     
     favoritesList.innerHTML = sortedFavorites.map((favorite, index) => `
-        <div class="favorite-item">
+        <div class="favorite-item" style="animation-delay: ${Math.min(index * 0.06, 0.6)}s">
             <div class="favorite-content">
                 <div class="character">${favorite.character}</div>
                 <div class="quote">"${favorite.quote}"</div>
@@ -277,7 +335,7 @@ function switchTheme() {
     } catch (error) {
         console.error('切换主题时出错:', error);
         // 显示错误提示
-        alert('切换主题时出现问题，请刷新页面重试。');
+        showToast('切换主题时出现问题，请刷新页面重试。');
     }
 }
 
@@ -288,6 +346,9 @@ function applyTheme(themeName) {
     
     // 添加新主题类
     document.body.classList.add(`theme-${themeName}`);
+
+    // 更新漂浮粒子
+    renderParticles(themeName);
 }
 
 // 更新主题按钮文字
@@ -378,7 +439,7 @@ function performCheckIn() {
         
         // 检查今天是否已经签到
         if (lastCheckInDate === todayStr) {
-            alert('今天已经签到过了！');
+            showToast('今天已经签到过了！');
             return;
         }
         
@@ -405,11 +466,11 @@ function performCheckIn() {
         updateCheckInStatus();
         
         // 显示签到成功消息
-        alert(`签到成功！连续签到 ${checkInData.streak} 天！`);
-        
+        showToast(`🎉 签到成功！连续签到 ${checkInData.streak} 天！`);
+
     } catch (error) {
         console.error('签到时出错:', error);
-        alert('签到失败，请重试。');
+        showToast('签到失败，请重试。');
     }
 }
 
@@ -478,10 +539,10 @@ function exportFavorites() {
         link.click();
         document.body.removeChild(link);
         
-        alert('收藏夹导出成功！');
+        showToast('📤 收藏夹导出成功！');
     } catch (error) {
         console.error('导出收藏夹时出错:', error);
-        alert('导出失败，请重试。');
+        showToast('导出失败，请重试。');
     }
 }
 
@@ -497,13 +558,12 @@ function handleImportFile(event) {
             
             if (validateImportFile(importData)) {
                 mergeFavorites(importData.favorites);
-                alert(`导入成功！共导入 ${importData.favorites.length} 条收藏。`);
             } else {
-                alert('文件格式不正确，请选择有效的收藏夹文件。');
+                showToast('文件格式不正确，请选择有效的收藏夹文件。');
             }
         } catch (error) {
             console.error('导入收藏夹时出错:', error);
-            alert('文件格式错误，请选择有效的JSON文件。');
+            showToast('文件格式错误，请选择有效的JSON文件。');
         }
     };
     
@@ -556,7 +616,9 @@ function mergeFavorites(importedFavorites) {
     displayFavorites();
     
     if (addedCount < importedFavorites.length) {
-        alert(`导入完成！新增 ${addedCount} 条收藏，跳过 ${importedFavorites.length - addedCount} 条重复收藏。`);
+        showToast(`📥 导入完成！新增 ${addedCount} 条，跳过 ${importedFavorites.length - addedCount} 条重复收藏。`);
+    } else {
+        showToast(`📥 导入成功！共导入 ${addedCount} 条收藏。`);
     }
 }
 
